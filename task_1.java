@@ -2,56 +2,52 @@
 
 import java.util.Arrays;
 
-public class task_1 {
-
-            public static void main(String[] args) {
-                int[] myArray = {8, 4, 7, 12, 2, 3, 1, 3, 77, 5};
-                System.out.println(Arrays.toString(myArray));
-                myArray = mergeSort(myArray);
-                System.out.println(Arrays.toString(myArray));
+    import java.util.Random;
+        
+    public class task_1 {
+        public static void main(String[] args) {
+            Random numbers = new Random();
+            int[] arr_numbers = new int[10];
+            for (int i = 0; i < arr_numbers.length; i++) {
+                arr_numbers[i] = numbers.nextInt(100);
             }
-
-
-            private static int[] mergeSort(int[] inputArray){
-                if (inputArray.length == 1)
-                    return inputArray;
-                else {
-                    int middle = inputArray.length/2;
-                    int[] left = new int[middle];
-                    int[] right = new int[inputArray.length - middle];
-
-                    for (int i = 0; i < middle; i++) {
-                        left[i] = inputArray[i];
-                    }
-                    for (int i = middle; i < inputArray.length; i++){
-                        right[i-middle] = inputArray[i];
-                    }
-
-                    return merge(mergeSort(left),mergeSort(right));
+            System.out.printf("Начальный массив: %s\n", Arrays.toString(arr_numbers));
+            System.out.printf("Отсортированный массив:%s", Arrays.toString(mergeSortArray(arr_numbers)));
+        }
+        
+        public static int[] mergeSortArray(int[] arr_numbers){
+            int[] temp;
+            int[] array = arr_numbers;
+            int[] doubleArray = new int[array.length];
+            int size = 1;
+            while (size < arr_numbers.length){
+                for (int i = 0; i < arr_numbers.length; i += 2 * size) {
+                merge(array, i, array, i+ size, doubleArray, i, size);
                 }
-            }
-
-            private static int[] merge(int[] left, int[] right){
-                int[] merged = new int[left.length+right.length];
-                int lengthLeft = left.length;
-                int lengthRight = right.length;
-                while (lengthLeft > 0 && lengthRight > 0){
-                    if (left[left.length - lengthLeft] < right[right.length - lengthRight]){
-                        merged[merged.length - lengthLeft - lengthRight] = left[left.length - lengthLeft];
-                        lengthLeft--;
-                    }else{
-                        merged[merged.length - lengthLeft-lengthRight] = right[right.length - lengthRight];
-                        lengthRight--;
-                    }
+                temp = array;
+                array = doubleArray;
+                doubleArray = temp;
+                size *= 2;
+        }
+            return array;
+        }
+        
+        public static void merge (int[] array1, int start1, int[] array2, int start2, int[] resultArray, int startResult, int size){
+            int index1 = start1;
+            int index2 = start2;
+    
+            int array1End = Math.min(start1+size, array1.length);
+            int array2End = Math.min(start2+size, array2.length);
+    
+            int count = array1End-start1 + array2End-start2;
+            for (int i = startResult; i < startResult + count ; i++) {
+                if(index1<array1End &&(index2 >= array2End || array1[index1] < array2[index2])){
+                    resultArray[i] = array1[index1];
+                    index1++;
+                } else {
+                    resultArray[i] = array2[index2];
+                    index2++;
                 }
-                while (lengthLeft > 0){
-                    merged[merged.length - lengthLeft] = left[left.length-lengthLeft];
-                    lengthLeft--;
-                }
-                while (lengthRight > 0){
-                    merged[merged.length - lengthRight] = right[right.length-lengthRight];
-                    lengthRight--;
-                }
-                return merged;
             }
         }
+    }
